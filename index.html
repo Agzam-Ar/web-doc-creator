@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<script src="script.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<style type="text/css">
+		body {
+			overflowX: hidden;
+			overflowY: hidden;
+		}
+
+		#loading-sreen {
+			position: fixed;
+			/*background: repeating-linear-gradient(
+				45deg,
+				hsl(230deg 40% 60%),
+				hsl(230deg 40% 60%) 2.5%,
+				hsl(230deg 40% 40%) 2.5%,
+				hsl(230deg 40% 40%) 5%
+			);*/
+			background: #000;
+			background-attachment: fixed;
+			z-index: 99999999;
+			right: 0;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			transition: .5s ease-out;
+		}
+
+		#loading-sreen.loading-sreen-loaded {
+			opacity: 0;
+			pointer-events: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="loading-sreen"></div>
+	<div class="menu-select-item-text" id="doc-name" contenteditable="true"></div>
+	<div id="menu">
+		<div id="menu-select">
+			<div class="menu-select-item" onclick="selectMenuItem(this)" name="file">Файл</div>
+			<div class="menu-select-item" onclick="selectMenuItem(this)" name="editor">Редактор</div>
+			<div class="menu-select-item" onclick="selectMenuItem(this)" name="print">Печать</div>
+		</div>
+		<div id="menu-content">
+		</div>
+
+		<div id="menu-contents">
+			<div class="menu-content-item" id="menu-content-file">
+				<div>
+					<a class="button" onclick="_save()">Сохранить</a>
+					<a class="button" onclick="_saveAs()">Скачать</a>
+					<a class="button" onclick="_saveAs('html')">Скачать как HTML</a>
+				</div>
+				<!-- <div>
+					<a class="button">Сохранить Как</a>
+				</div> -->
+			</div>
+			<div class="menu-content-item" id="menu-content-editor">
+			</div>
+			<div class="menu-content-item" id="menu-content-print">
+				<div>
+					<a class="button" onclick="_print()">Печать</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="fake-menu"></div>
+	<div id="body">
+		<div id="content">
+			<div id="drag-end" class="no-doc"></div>
+			<div id="content-context-menu" class="no-doc">
+				<a class="context-button" onclick="contentContextMenu(this)" name="insert-text">Вставить текст</a>
+				<a class="context-button" onclick="contentContextMenu(this)" name="insert-molecular-formula">Вставить формулу</a>
+				<a class="context-button" onclick="contentContextMenu(this)" name="insert-structure-formula">Вставить формулу</a>
+			</div>
+			<!-- <div id="textarea" class="textarea" contenteditable></div> -->
+		</div>
+	</div>
+
+	<div id="cm" style="width: 1cm; height: 1cm; pointer-events: none; opacity: 0;"></div>
+	<!-- <button onclick="printPage()">Печать</button> -->
+</body>
+</html>
