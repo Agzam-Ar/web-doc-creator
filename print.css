@@ -1,18 +1,300 @@
 @media print {
 	@page {
-		margin-top: 0;
-		margin-bottom: 0;
 		margin: 0;
 		padding: 0;
+		margin-right: -1cm;
+		margin-bottom: -1cm;
 	}
 
 	body  {
+		display: flex;
+		align-content: center;
+		justify-content: center;
+		align-items: center;
 		overflow: hidden;
 		margin: 0;
 		padding: 0;
 	}
 }
 
-#menu-content-item {
+#content-context-menu {
 	display: none;
+}
+
+#content {
+	display: block;
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	background: #FFF;
+	box-shadow: .25cm .5cm .1cm #00000033;
+}
+
+.textarea, .formula {
+	display: flex;
+	position: absolute;
+	outline: none;
+
+	min-width: .5cm;
+	min-height: .5cm;
+
+	width: fit-content;
+	top: 0;
+	left: 0;
+
+	margin: -.5cm;
+	border: .5cm transparent solid;
+}
+
+.textarea {
+	display: flex;
+	position: absolute;
+	outline: none;
+
+	min-width: .5cm;
+	min-height: .5cm;
+
+	width: fit-content;
+	top: 0;
+	left: 0;
+
+	margin: -.5cm;
+	border: .5cm transparent solid;
+}
+
+.formula.molecular > div {
+	pointer-events: auto !important;
+	user-select: auto;
+	display: inline-flex;
+	padding: .05cm .2cm;
+	background: #DDD;
+
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: nowrap;
+    text-align: center;
+    border-radius: .1cm;
+    z-index: 15;
+}
+
+.formula.molecular > div > sub {
+	transform: translateY(25%);
+}
+
+
+
+
+.formula {
+	display: flex;
+	position: absolute;
+	outline: none;
+	font-family: monospace;
+    background: transparent;
+    outline: none;
+	min-width: .5cm;
+	min-height: .5cm;
+	width: fit-content;
+	top: 0;
+	left: 0;
+	padding: 0;
+}
+
+.formula.molecular > div {
+	pointer-events: auto !important;
+	user-select: auto;
+	display: inline-flex;
+	padding: .05cm .2cm;
+	background: #DDD;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: nowrap;
+    text-align: center;
+    border-radius: .1cm;
+    z-index: 15;
+    outline: none;
+}
+
+.formula.molecular > div > sub {
+	transform: translateY(25%);
+}
+
+.formula.molecular {
+	display: inline-flex;
+	background: transparent;
+	margin: -.5cm;
+	border: .5cm transparent solid;
+    z-index: 4;
+	box-shadow: 0 0 0 .1cm transparent inset;
+}
+
+.formula.molecular:focus-within {
+	background: #DDD;
+	box-shadow: 0 0 0 .1cm #DDD inset, .25cm .25cm .5cm #DDD;
+}
+
+.formula:hover {
+	box-shadow: 0 0 0 .1cm #DDD inset, .25cm .25cm .5cm transparent;
+	border-color: #DDD;
+	background: transparent;
+}
+
+.formula.molecular.drag[isDrag="1"] {
+	user-select: none;
+	box-shadow: 0 0 0 .1cm transparent inset, .25cm .25cm .5cm #00000033;
+    border: 0.5cm transparent solid;
+	background: #FFF;
+	z-index: 50;
+}
+
+.formula.molecular.drag[isDrag="1"] > div {
+    background: #DDD;
+    border-radius: 0.1cm;
+
+}
+
+
+.formula.structure {
+	display: block;
+    border-radius: .1cm;
+}
+
+.formula.structure > div {
+	pointer-events: auto !important;
+	user-select: auto;
+	display: inline-flex;
+	padding: .05cm .2cm;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: nowrap;
+    text-align: center;
+    z-index: 15;
+    outline: none;
+}
+
+.formula.structure > div > sub {
+	transform: translateY(25%);
+}
+
+.formula.structure {
+	/*display: inline-flex;*/
+	background: #DDD;
+	margin: -.5cm;
+	border: .5cm transparent solid;
+    z-index: 4;
+    padding: 0;
+	box-shadow: 0 0 0 .1cm transparent inset;
+}
+
+.formula.structure > {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+table {
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.structure-formula-cell {
+	outline: none;
+    text-align: center;
+	min-width: .5cm;
+	min-height: .5cm;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border: 1px #00000000 solid;
+	margin: 0;
+	white-space: nowrap;
+}
+
+.structure-formula-cell[value = "-"] {
+	color: transparent;
+	background: linear-gradient(180deg, transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px));
+}
+
+.structure-formula-cell[value = "--"] {
+	color: transparent;
+	background-image: linear-gradient(180deg, 
+		transparent calc(40% - 1px), #333 calc(40%), transparent calc(40% + 1px),
+		transparent calc(60% - 1px), #333 calc(60%), transparent calc(60% + 1px)
+	);
+}
+.structure-formula-cell[value = "---"] {
+	color: transparent;
+	background-image: linear-gradient(180deg, 
+		transparent calc(30% - 1px), #333 calc(30%), transparent calc(30% + 1px),
+		transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px),
+		transparent calc(70% - 1px), #333 calc(70%), transparent calc(70% + 1px)
+	);
+}
+
+.structure-formula-cell[value = "|"] {
+	color: transparent;
+	background-image: linear-gradient(90deg, transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px));
+}
+.structure-formula-cell[value = "||"] {
+	color: transparent;
+	background-image: linear-gradient(90deg, 
+		transparent calc(40% - 1px), #333 calc(40%), transparent calc(40% + 1px),
+		transparent calc(60% - 1px), #333 calc(60%), transparent calc(60% + 1px)
+	);
+}
+.structure-formula-cell[value = "|||"] {
+	color: transparent;
+	background-image: linear-gradient(90deg, 
+		transparent calc(30% - 1px), #333 calc(30%), transparent calc(30% + 1px),
+		transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px),
+		transparent calc(70% - 1px), #333 calc(70%), transparent calc(70% + 1px)
+	);
+}
+
+.structure-formula-cell[value = "/"] {
+	color: transparent;
+	background-image: linear-gradient(0deg, transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px));
+	transform: rotate(var(--rotate));
+}
+.structure-formula-cell[value = "//"] {
+	color: transparent;
+	background-image: linear-gradient(0deg, 
+		transparent calc(40% - 1px), #333 calc(40%), transparent calc(40% + 1px),
+		transparent calc(60% - 1px), #333 calc(60%), transparent calc(60% + 1px)
+	);
+	transform: rotate(var(--rotate));
+}
+.structure-formula-cell[value = "///"] {
+	color: transparent;
+	background-image: linear-gradient(0deg, 
+		transparent calc(30% - 1px), #333 calc(30%), transparent calc(30% + 1px),
+		transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px),
+		transparent calc(70% - 1px), #333 calc(70%), transparent calc(70% + 1px)
+	);
+	transform: rotate(var(--rotate));
+}
+
+.structure-formula-cell[value = "\\"] {
+	color: transparent;
+	background-image: linear-gradient(0deg, transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px));
+	transform: rotate(var(--rotate));
+}
+.structure-formula-cell[value = "\\\\"] {
+	color: transparent;
+	background-image: linear-gradient(0deg, 
+		transparent calc(40% - 1px), #333 calc(40%), transparent calc(40% + 1px),
+		transparent calc(60% - 1px), #333 calc(60%), transparent calc(60% + 1px)
+	);
+	transform: rotate(var(--rotate));
+}
+.structure-formula-cell[value = "\\\\\\"] {
+	color: transparent;
+	background-image: linear-gradient(0deg, 
+		transparent calc(30% - 1px), #333 calc(30%), transparent calc(30% + 1px),
+		transparent calc(50% - 1px), #333 calc(50%), transparent calc(50% + 1px),
+		transparent calc(70% - 1px), #333 calc(70%), transparent calc(70% + 1px)
+	);
+	transform: rotate(var(--rotate));
 }

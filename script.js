@@ -42,9 +42,6 @@ window.onload = function() {
 
 	resizePaper();
 
-	for (var i = 0; i < 99999999; i++) {
-	}
-
 	eContent.oncontextmenu = function(e) {
 		if(e.target == eContent) {
 			eContentContextMenu.setAttribute("isvisible", 1);
@@ -150,15 +147,27 @@ function contentContextMenu(element) {
 		}
 
 		if(name == 'insert-molecular-formula') {
-
 			var eContenteditable = document.createElement('div');
 			eContenteditable.setAttribute('contenteditable', true);
 			eInsert.append(eContenteditable);
-
 			eContenteditable.innerText = "C";
 			eContenteditable.classList = "molecular-formula-content";
-
 			molecularFormulaInputTo(eContenteditable);
+		}
+
+		if(name == 'insert-structure-formula') {
+			var eTable = document.createElement('table');
+
+			for (let r = 0; r < 1; r++) {
+				const row = eTable.insertRow();
+				createCells(eTable, row, 1);
+			}
+
+			eInsert.append(eTable);
+			// eTable.innerText = "C";
+			eTable.classList = "structure-formula-content";
+
+			structureFormulaInputTo(eTable);
 		}
 
 		eInsert.style.left = cmX + 'cm';
@@ -221,6 +230,11 @@ document.onmousedown = function(e) {
 
 		eDragEnd.style.minWidth = target.style.minWidth;
 		eDragEnd.style.minHeight = target.style.minHeight;
+		eDragEnd.style.fontFamily = target.classList.contains('formula') ? 'monospace' : "";
+		// eDragEnd.style.fontWeight = target.style.fontWeight;
+		// eDragEnd.style.fontSize = target.style.fontSize;
+
+		console.log(target);
 
 		eDragEnd.style.borderWidth = target.style.borderWidth;
 
@@ -292,7 +306,193 @@ document.onmousedown = function(e) {
 	}
 };
 
+function createCells(eTable, row, count) {
+	console.log(count);
+	// if(isNaN(Math.round(count))) count = eTable.rows[0].cells.length;
+	for (let c = 0; c < count; c++) {
+		const cell = row.insertCell();
+		initCell(eTable, row, cell);
+	}
+}
+
+function initCell(eTable, row, cell) {
+	cell.appendChild(document.createTextNode(``));
+	cell.classList = 'structure-formula-cell';
+	cell.setAttribute('contenteditable', true);
+	cell.setAttribute('value', cell.innerText);
+	cell.setAttribute('spellcheck', false);
+
+	cell.oninput = function(e) {
+		var text = cell.innerText;
+		cell.setAttribute('value', text);
+
+		// if([
+		// 	'-','--','---',
+		// 	'|','||','|||',
+		// 	'/','//','///',
+		// 	
+		// 	].indexOf(text) != -1) {
+		// 	var hypot = Math.hypot(text.length, 1);
+		// 	cell.parentElement.style.height = hypot + 'px';
+		// 	console.log(text, hypot);
+		// } else {
+		// 	cell.style.maxWidth = 'unset';
+		// }
+		_resize();
+	}
+
+	function _resize() {
+		var text = cell.innerText;
+		console.log("RESIZE");
+		var w = cell.offsetWidth;
+		var h = cell.offsetHeight;
+		var deg = Math.atan2(h,w)*180/Math.PI;
+
+		if(['/','//','///'].indexOf(text) != -1) {
+			var hypot = Math.hypot(text.length, 1);
+			cell.style.setProperty("--rotate", (-deg) + 'deg');
+		} else if(['\\','\\\\','\\\\\\'].indexOf(text) != -1) {
+			cell.style.setProperty("--rotate", deg + 'deg');
+		} else {
+			cell.style.setProperty("--rotate", 0 + 'deg');
+			cell.style.maxWidth = 'unset';
+		}
+	}
+	_resize();
+	new ResizeObserver(_resize).observe(cell);
+
+	cell.onkeydown = function(e) {
+		var rowIndex = cell.parentElement.rowIndex;
+		var cellIndex = cell.cellIndex;
+
+		var selection = getSelectionCharacterOffsetWithin(e.target);
+
+		if(e.altKey) {
+			if(e.code == 'ArrowUp') {
+				var count = eTable.rows[0].cells.length;
+				const row = eTable.insertRow(rowIndex);
+				createCells(eTable, row, count);
+			}
+			if(e.code == 'ArrowDown') {
+				var count = eTable.rows[0].cells.length;
+				const row = eTable.insertRow(rowIndex+1);
+				createCells(eTable, row, count);
+			}
+
+			if(e.code == 'ArrowRight') {
+				for (var rr = 0; rr < eTable.rows.length; rr++) {
+					const cell = eTable.rows[rr].insertCell(cellIndex+1);
+					initCell(eTable, row, cell);
+				}
+			}
+			if(e.code == 'ArrowLeft') {
+				for (var rr = 0; rr < eTable.rows.length; rr++) {
+					const cell = eTable.rows[rr].insertCell(cellIndex);
+					initCell(eTable, row, cell);
+				}
+			}
+		} else if(selection.start == selection.end) {
+			var s = selection.start;
+			var text = e.target.innerText;
+			if(e.code == 'ArrowUp') {
+				if(rowIndex > 0) eTable.rows[rowIndex-1].cells[cellIndex].focus();
+				e.preventDefault();
+			}
+			if(e.code == 'ArrowDown') {
+				if(rowIndex + 1 < eTable.rows.length) eTable.rows[rowIndex+1].cells[cellIndex].focus();
+				e.preventDefault();
+			}
+
+			if(e.code == 'ArrowRight' && s == e.target.innerText.length) {
+				if(cellIndex + 1 < eTable.rows[0].cells.length) eTable.rows[rowIndex].cells[cellIndex+1].focus();
+				e.preventDefault();
+			}
+			if(e.code == 'ArrowLeft' && s == 0) {
+				if(cellIndex > 0) eTable.rows[rowIndex].cells[cellIndex-1].focus();
+				e.preventDefault();
+			}
+			// if(e.code == 'ArrowLeft') {
+			// 	for (var rr = 0; rr < eTable.rows.length; rr++) {
+			// 		const cell = eTable.rows[rr].insertCell(cellIndex);
+			// 		initCell(eTable, row, cell);
+			// 	}
+			// }
+			// restoreSelection(e.target, selection);
+		}
+	}
+}
+
+function getSelectionCharacterOffsetWithin(element) {
+    var start = 0;
+    var end = 0;
+    var doc = element.ownerDocument || element.document;
+    var win = doc.defaultView || doc.parentWindow;
+    var sel;
+    if (typeof win.getSelection != "undefined") {
+        sel = win.getSelection();
+        if (sel.rangeCount > 0) {
+            var range = win.getSelection().getRangeAt(0);
+            var preCaretRange = range.cloneRange();
+            preCaretRange.selectNodeContents(element);
+            preCaretRange.setEnd(range.startContainer, range.startOffset);
+            start = preCaretRange.toString().length;
+            preCaretRange.setEnd(range.endContainer, range.endOffset);
+            end = preCaretRange.toString().length;
+        }
+    } else if ( (sel = doc.selection) && sel.type != "Control") {
+        var textRange = sel.createRange();
+        var preCaretTextRange = doc.body.createTextRange();
+        preCaretTextRange.moveToElementText(element);
+        preCaretTextRange.setEndPoint("EndToStart", textRange);
+        start = preCaretTextRange.text.length;
+        preCaretTextRange.setEndPoint("EndToEnd", textRange);
+        end = preCaretTextRange.text.length;
+    }
+    return { start: start, end: end };
+}
+
 function molecularFormulaInputTo(element) {
+	element.oninput = function(e) {
+		updateTitle(false);
+
+		var selection = saveSelection(e.target);
+
+		var ss = e.target.selectionStart;
+		var se = e.target.selectionEnd;
+
+		if(e.data != null) {
+			ss += e.data.length;
+			se += e.data.length;
+		}
+
+		var text = e.target.innerText.replaceAll(' ', '').replaceAll('\n', '');
+		var newHTML = "";
+		var isLastNumber = false;
+		for (var i = 0; i < text.length; i++) {
+			var char = text.charAt(i);
+			if(!isLastNumber && isNumeric(char)) {
+				newHTML += '<sub>';
+			} else if(isLastNumber && !isNumeric(char)) {
+				newHTML += '</sub>';
+			}
+			newHTML += char;
+			isLastNumber = isNumeric(char);
+		}
+		if(isLastNumber) {
+			newHTML += '</sub>';
+		}
+		e.target.innerHTML = newHTML;
+
+		setTimeout(() => {
+			var containerEl = e.target;
+			var savedSel = selection;
+
+			restoreSelection(e.target, selection);
+		});
+	}
+}
+
+function structureFormulaInputTo(element) {
 	element.oninput = function(e) {
 		updateTitle(false);
 
@@ -377,74 +577,6 @@ function selectMenuItem(element) {
 		}
 	}
 	eBoldButton = document.getElementsByClassName('bold-button');
-	// body...
-}
-
-function changeBold() {
-	isBold = !isBold;
-	for (var i = eBoldButton.length - 1; i >= 0; i--) {
-		eBoldButton[i].setAttribute('isToggled', isBold);
-	}
-}
-
-function insertMolecularFormula() {
-	var eMolecularFormula = document.createElement('div');
-	eMolecularFormula.classList = 'molecular formula';
-	eMolecularFormula.setAttribute('spellcheck', false);
-	// eMolecularFormula.setAttribute('readonly', '1');
-	eMolecularFormula.setAttribute("contenteditable", false);
-
-	var eMolecularFormulaEditable = document.createElement('div');
-	eMolecularFormulaEditable.innerHTML = "C<sub>n1</sub>H<sub>n2</sub>";
-	eMolecularFormulaEditable.setAttribute("contenteditable", true);
-	eMolecularFormula.append(eMolecularFormulaEditable);
-
-	eMolecularFormula.onkeydown = function(e) {
-		if((e.code == 'Delete' || e.code == 'Backspace') && (eMolecularFormulaEditable.innerText == "" || eMolecularFormulaEditable.innerText == " ")) {
-			eMolecularFormula.parentElement.removeChild(eMolecularFormula);
-		}
-	};
-
-	eMolecularFormula.readOnly = true;
-	eMolecularFormula.contenteditable = false;
-	eTextarea.append(eMolecularFormula);
-	updateTextArea();
-}
-
-function insertStructureFormula() {
-	var eStructureFormula = document.createElement('div');
-	eStructureFormula.classList = 'structure formula';
-	eStructureFormula.setAttribute('spellcheck', false);
-	eStructureFormula.setAttribute("contenteditable", false);
-
-	var eStructureFormulaEditable = document.createElement('div');
-	// eStructureFormulaEditable.innerHTML = "C<sub>n1</sub>H<sub>n2</sub>";
-	eStructureFormulaEditable.setAttribute("contenteditable", true);
-	eStructureFormula.append(eStructureFormulaEditable);
-
-	eStructureFormula.onkeydown = function(e) {
-		if((e.code == 'Delete' || e.code == 'Backspace') && (eStructureFormulaEditable.innerText == "" || eStructureFormulaEditable.innerText == " ")) {
-			eStructureFormula.parentElement.removeChild(eStructureFormula);
-		}
-	};
-
-	eStructureFormula.readOnly = true;
-	eStructureFormula.contenteditable = false;
-	eTextarea.append(eStructureFormula);
-	updateTextArea();
-}
-
-function updateTextArea() {
-	if(eTextarea.innerHTML.endsWith('>')) {
-		eTextarea.append('\u200A');
-		// eTextarea.innerHTML += "";
-	}
-	if(eTextarea.innerHTML.startsWith('<')) {
-		eTextarea.prepend('\u200A');
-	}
-}
-
-function createInvisibleSeparator() {
 	// body...
 }
 
@@ -539,7 +671,7 @@ function _saveAs(type) {
 		var saStyle = document.createElement('style');
 
 		var saHead = document.createElement('head');
-		saHead.innerHTML = `<style>` + doc_style + "</style>";
+		saHead.innerHTML = doc_style;
 		saHtml.append(saHead);
 
 		var saBody = document.createElement('body');
@@ -635,10 +767,25 @@ function _load() {
 		molecularFormulaInputTo(eMolecularFormulaContents[i]);
 	}
 
+	var eStructureFormulaContents = document.getElementsByClassName('structure-formula-content');
+	for (var i = 0; i < eStructureFormulaContents.length; i++) {
+		var eTable = eStructureFormulaContents[i];
+		console.log(eTable);
+
+		for (var r = 0; r < eTable.rows.length; r++) {
+			var row = eTable.rows[r];
+			for (var c = 0; c < row.cells.length; c++) {
+				// row.cells[c]
+				initCell(eTable, row, row.cells[c]);
+			}
+		}
+		structureFormulaInputTo(eStructureFormulaContents[i]);
+	}
+
 	updateTitle(true);
 }
 
-const doc_style = `
+const doc_style = `<link rel="stylesheet" type="text/css" href="print.css">` /*
 	<style>
 		@media print {
 			@page {
@@ -724,18 +871,21 @@ const doc_style = `
 			transform: translateY(25%);
 		}
 	</style>
-`;
+`;*/
 
 function _print() {
 		var print_area = window.open("", "Печать");
 
 		print_area.document.write(doc_style);
+		// print_area.document.write(``);
 		print_area.document.write(eContent.innerHTML);
 		print_area.document.close();
+			print_area.focus();
 		
-		print_area.focus();
-		print_area.print();
-		print_area.close();
+		print_area.document.onload = function() {
+			print_area.print();
+			print_area.close();
+		}
 }
 
 function defaultEventsToContenteditableElement(element) {
@@ -747,6 +897,9 @@ function defaultEventsToContenteditableElement(element) {
 		if ((e.code == "Backspace" || e.code == 'Delete') && e.target.innerText == '' && e.ctrlKey) {
 			if(e.target.classList.contains('molecular-formula-content')) {
 				e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+			} else if(e.target.classList.contains('structure-formula-content')) {
+				console.log(e.target);
+				// e.target.parentElement.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement.parentElement);
 			} else {
 				e.target.parentElement.removeChild(e.target);
 			}
