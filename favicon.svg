@@ -1,0 +1,11 @@
+<svg viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45 50 50)">
+		<line stroke="#707ec2" stroke-width="10" x1="0" x2="0"   y1="0" y2="10"/>
+		<line stroke="#3d4b8f" stroke-width="10" x1="10" x2="10" y1="0" y2="10"/>
+	</pattern>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="15" stroke="#FFF" fill="#FFF" d="M45,10 L45,50 L20,90 L80,90 L55,50 L55,10 Z"></path>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="10" stroke="#333" fill="#333" d="M45,10 L45,50 L20,90 L80,90 L55,50 L55,10 Z"></path>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" stroke="#FFF" fill="#FFF" d="M45,10 L45,50 L20,90 L80,90 L55,50 L55,10 Z"></path>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" stroke="url(#g)" fill="url(#g)" d="M45,50 L20,90 L80,90 L55,50 Z"></path>
+	<path stroke-width="5" stroke="#FFF" fill="#FFF" d="M45,15 L45,46.75 L55,46.75 L55,15 Z"></path>
+</svg>

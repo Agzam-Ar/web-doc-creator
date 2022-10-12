@@ -24,8 +24,12 @@ let isBold;
 let isItalic;
 let isUnderlined;
 
+let eInfo;
+
 window.onload = function() {
+	eInfo = document.getElementById('info');
 	eDocName = document.getElementById('doc-name');
+	eDocName.innerText = documentName;
 	eCm = document.getElementById('cm');
 	eBody = document.getElementById('body');
 	eContent = document.getElementById('content');
@@ -61,6 +65,17 @@ window.onload = function() {
 
 	document.getElementById('loading-sreen').classList = 'loading-sreen-loaded';
 	document.body.overflowY = 'auto';
+
+	eDocName.addEventListener('paste', function (e) {
+		e.preventDefault();
+		var text = e.clipboardData.getData('text/plain');
+		document.execCommand('insertText', false, text);
+	});
+
+	eDocName.oninput = function(e) {
+		documentName = eDocName.innerText;
+		updateTitle(false);
+	}
 }
 
 window.onbeforeprint = function(e) {
@@ -110,6 +125,28 @@ window.onclose = function(e) {
 
 window.onclick = function(e) {
 	if(e.target != eContentContextMenu && e.target.parentElement != eContentContextMenu) eContentContextMenu.setAttribute("isvisible", 0);
+
+	var target = e.target;
+
+	eInfo.innerHTML = "";
+	if(target.classList.contains('drag') 
+		|| target.parentElement.classList.contains('drag') 
+		|| target.parentElement.parentElement.classList.contains('drag')
+		|| target.parentElement.parentElement.parentElement.classList.contains('drag')
+		|| target.parentElement.parentElement.parentElement.parentElement.classList.contains('drag')
+		) {
+		eInfo.innerHTML += "<key>CTRL + ДВИЖЕНИЕ МЫШКОЙ</key> - двигать элемент";
+	}
+
+	if(target.classList.contains('textarea') || target.classList.contains('molecular-formula-content')) {
+		eInfo.innerHTML += " | <key>CTRL + BACKSPACE</key> - удалить элемент";
+	}
+	if(target.classList.contains('structure-formula-cell')) {
+		eInfo.innerHTML += " | <key>CTRL + BACKSPACE</key> - удалить колонку";
+		eInfo.innerHTML += " | <key>ALT + BACKSPACE</key> - удалить строку";
+		eInfo.innerHTML += " | <key>ALT + СРЕЛКА</key> - добавить строку/колонку";
+		eInfo.innerHTML += " | <key>-, |, /, \\</key><key>--, ||, //, \\\\</key><key>---, |||, ///, \\\\\\</key> - молекулярные связи";
+	}
 }
 
 window.onresize = function(e) {
@@ -411,13 +448,6 @@ function initCell(eTable, row, cell) {
 				if(cellIndex > 0) eTable.rows[rowIndex].cells[cellIndex-1].focus();
 				e.preventDefault();
 			}
-			// if(e.code == 'ArrowLeft') {
-			// 	for (var rr = 0; rr < eTable.rows.length; rr++) {
-			// 		const cell = eTable.rows[rr].insertCell(cellIndex);
-			// 		initCell(eTable, row, cell);
-			// 	}
-			// }
-			// restoreSelection(e.target, selection);
 		}
 	}
 }
@@ -732,6 +762,7 @@ function _toSave() {
 	}
 
 	return {
+		name: documentName,
 		elements: saveElemetsData
 	};
 }
@@ -745,6 +776,8 @@ function _load() {
 	var loaded = localStorage.saved_doc;
 	if(loaded == undefined) return;
 	loaded = JSON.parse(loaded);
+
+	if(loaded.name != undefined) documentName = loaded.name;
 
 	for (var i = 0; i < loaded.elements.length; i++) {
 		var elemetData = loaded.elements[i];
@@ -879,13 +912,9 @@ function _print() {
 		print_area.document.write(doc_style);
 		// print_area.document.write(``);
 		print_area.document.write(eContent.innerHTML);
+		print_area.document.write(`<script>window.onload=function(){print();close()}</script>`);
 		print_area.document.close();
-			print_area.focus();
-		
-		print_area.document.onload = function() {
-			print_area.print();
-			print_area.close();
-		}
+		print_area.focus();
 }
 
 function defaultEventsToContenteditableElement(element) {
@@ -894,13 +923,24 @@ function defaultEventsToContenteditableElement(element) {
 	}
 
 	element.onkeydown = function(e) {
-		if ((e.code == "Backspace" || e.code == 'Delete') && e.target.innerText == '' && e.ctrlKey) {
-			if(e.target.classList.contains('molecular-formula-content')) {
+		var isEmtpy = e.target.innerText == '';
+		if ((e.code == "Backspace" || e.code == 'Delete')) {
+				console.log(e.target.parentElement.innerText);
+			if(isEmtpy && e.target.classList.contains('molecular-formula-content') && e.ctrlKey) {
 				e.target.parentElement.parentElement.removeChild(e.target.parentElement);
-			} else if(e.target.classList.contains('structure-formula-content')) {
-				console.log(e.target);
-				// e.target.parentElement.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement.parentElement);
-			} else {
+			} else if(e.target.classList.contains('structure-formula-cell')) {
+				console.log(e.target.parentElement.innerText);
+				if(isEmtpy && e.target.parentElement.innerText.trim() == '' && e.ctrlKey) {
+					e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+				} else if(e.altKey) {
+					console.log(e.target.cellIndex);
+					var index = e.target.cellIndex;
+					var eTable = e.target.parentElement.parentElement.parentElement;
+					for (var i = 0; i < eTable.rows.length; i++) {
+						eTable.rows[i].removeChild(eTable.rows[i].cells[index]);
+					}
+				}
+			} else if(isEmtpy && e.ctrlKey) {
 				e.target.parentElement.removeChild(e.target);
 			}
 			updateTitle(false);
@@ -912,7 +952,10 @@ function updateTitle(isSaved, newDocumentName) {
 	if(newDocumentName != undefined) documentName = newDocumentName;
 	if(isSaved != undefined) isDocSaved = isSaved;
 
+	var selection = document.activeElement == eDocName ? saveSelection(eDocName) : null;
+	console.log(selection);
 	eDocName.innerText = documentName;
 	eDocName.setAttribute('isSaved', isDocSaved);
 	document.title = (isSaved ? '' : '*') + documentName;
+	if(selection != null) restoreSelection(eDocName, selection);
 }
