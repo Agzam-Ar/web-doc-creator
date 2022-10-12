@@ -1,11 +1,11 @@
-<svg viewBox="-5 -5 110 110" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg viewBox="0 0 110 110" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45 50 50)">
 		<line stroke="#707ec2" stroke-width="40" x1="0" x2="0"   y1="0" y2="40"/>
 		<line stroke="#3d4b8f" stroke-width="40" x1="40" x2="40" y1="0" y2="40"/>
 	</pattern>
-	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="30" stroke="#FFF" fill="#FFF" d="M45,10 L45,50 L20,90 L80,90 L55,50 L55,10 Z"></path>
-	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="20" stroke="#333" fill="#333" d="M45,10 L45,50 L20,90 L80,90 L55,50 L55,10 Z"></path>
-	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="10" stroke="#FFF" fill="#FFF" d="M45,10 L45,50 L20,90 L80,90 L55,50 L55,10 Z"></path>
-	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="10" stroke="url(#g)" fill="url(#g)" d="M45,50 L20,90 L80,90 L55,50 Z"></path>
-	<path stroke-width="10" stroke="#FFF" fill="#FFF" d="M45,15 L45,46.75 L55,46.75 L55,15 Z"></path>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="30" stroke="#FFF" fill="#FFF"	   d="M50,15 L50,55 L25,95 L85,95 L60,55 L60,15 Z"></path>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="20" stroke="#333" fill="#333"	   d="M50,15 L50,55 L25,95 L85,95 L60,55 L60,15 Z"></path>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="10" stroke="#FFF" fill="#FFF"	   d="M50,15 L50,55 L25,95 L85,95 L60,55 L60,15 Z"></path>
+	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="10" stroke="url(#g)" fill="url(#g)" d="M50,55 		L25,95 L85,95 L60,55 Z"></path>
+	<path stroke-width="10" stroke="#FFF" fill="#FFF" 													   d="M50,25 L50,48.5 L60,48.5 L60,25 Z"></path>
 </svg>

@@ -15,6 +15,15 @@
 
 		#loading-sreen {
 			position: fixed;
+
+    		display: flex;
+    		text-align: center;
+    		align-content: center;
+    		justify-content: center;
+    		align-items: center;
+    		flex-wrap: nowrap;
+    		flex-direction: row;
+
 			/*background: repeating-linear-gradient(
 				45deg,
 				hsl(230deg 40% 60%),
@@ -39,7 +48,9 @@
 	</style>
 </head>
 <body>
-	<div id="loading-sreen"></div>
+	<div id="loading-sreen">
+		
+	</div>
 	<div class="menu-select-item-text" id="doc-name" contenteditable="true"></div>
 	<div id="menu">
 		<div id="menu-select">
@@ -86,6 +97,15 @@
 	<div id="cm" style="width: 1cm; height: 1cm; pointer-events: none; opacity: 0;"></div>
 
 	<div id="info"></div>
+	<svg id="ico" class="ico"><image class="ico" xlink:href="favicon.svg"></svg>
 	<!-- <button onclick="printPage()">Печать</button> -->
+
+	<!-- <div id="about">
+		<h1>
+			<svg width="1em" height="1em"><image xlink:href="favicon.svg"/ width="1em" height="1em"></svg>
+			Web doc creator
+			<svg width="1em" height="1em"><image xlink:href="favicon.svg"/ width="1em" height="1em"></svg>
+		</h1>
+	</div> -->
 </body>
 </html>

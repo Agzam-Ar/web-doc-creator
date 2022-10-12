@@ -87,6 +87,64 @@ body  {
 	z-index: 1;
 }
 
+#about {
+	position: fixed;
+	width: calc(90% - 10em);
+	height: calc(90% - 2em);
+	top: 5%;
+	padding: 1em 5em;
+	margin: -1em -5em;
+	z-index: 9999;
+	background: #FFF;
+	box-shadow: 0 0 5em 3em #00000099;
+}
+
+
+#ico {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 99999999;
+    display: flex;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    /*image-rendering: -moz-crisp-edges;         */
+    /*image-rendering:   -o-crisp-edges;         */
+    /*image-rendering: -webkit-optimize-contrast;*/
+    /*image-rendering: crisp-edges;*/
+    /*will-change: transform;*/
+}
+
+#ico {
+	/*transform: scale3d(1, 1, 0.75);*/
+	padding: calc(var(--menu-select-height) * .125);
+}
+
+.ico {
+	font-size: var(--menu-font-size);
+	width: calc(var(--menu-select-height) * .75);
+	height: calc(var(--menu-select-height) * .75);
+	margin: 0;
+	-webkit-filter: blur(0px); 
+}
+
+#about > h1 {
+	user-select: none;
+    display: flex;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    color: var(--background-color-dark);
+}
+
+
 #fake-menu {
 	font-size: var(--menu-font-size);
 	display: flex;
@@ -172,7 +230,7 @@ body  {
 
 	min-width: var(--menu-select-height);
 	outline: none;
-	
+
     -webkit-user-modify: read-write;
     -moz-user-modify: read-write;
     user-modify: read-write;
