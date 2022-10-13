@@ -135,7 +135,7 @@ window.onclick = function(e) {
 		|| target.parentElement.parentElement.parentElement.classList.contains('drag')
 		|| target.parentElement.parentElement.parentElement.parentElement.classList.contains('drag')
 		) {
-		eInfo.innerHTML += "<key>CTRL + ДВИЖЕНИЕ МЫШКОЙ</key> - двигать элемент";
+		eInfo.innerHTML += "<key>SHIFT + ДВИЖЕНИЕ МЫШКОЙ</key> - двигать элемент";
 	}
 
 	if(target.classList.contains('textarea') || target.classList.contains('molecular-formula-content')) {
